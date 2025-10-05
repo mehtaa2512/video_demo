@@ -5,10 +5,38 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Engage360</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden; /* prevent page scroll */
+        background: #000;
+      }
+      #demoVideo {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover; /* fill without letterboxing */
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <video id="demoVideo" src="/videos/nature.mp4" autoplay muted playsinline loop preload="auto" controls></video>
+    
+    <script>
+      (function() {
+        const v = document.getElementById('demoVideo');
+        if (v && v.addEventListener) {
+          // Ensure looping resumes even if the browser ignores the loop attribute occasionally
+          v.addEventListener('ended', function() {
+            try { v.currentTime = 0; } catch (e) {}
+            const p = v.play && v.play();
+            if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+          });
+        }
+      })();
+    </script>
   </body>
   </html>
 
