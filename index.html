@@ -5,6 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Engage360</title>
+    <link rel="preload" as="video" href="/videos/nature.mp4" type="video/mp4">
     <style>
       html, body {
         margin: 0;
@@ -26,6 +27,9 @@
     
     <script>
       (function() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js').catch(function() {})
+        }
         const v = document.getElementById('demoVideo');
         if (v && v.addEventListener) {
           // Ensure looping resumes even if the browser ignores the loop attribute occasionally
