@@ -1,0 +1,11 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Ensure single-page app routing works on Netlify
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+
