@@ -1,6 +1,6 @@
 import VideoJSPlayer from './components/VideoJSPlayer'
 
-const LOCAL_4K = '/videos/nature.mp4'
+const LOCAL_4K = '/videos/vikas.mp4'
 
 export default function App() {
 	const src = LOCAL_4K
