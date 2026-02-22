@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Engage360</title>
-    <link rel="preload" as="video" href="/videos/vikas.mp4" type="video/mp4">
+    <link rel="preload" as="video" href="https://storage.googleapis.com/engage360_signage_trial/e360_Signage_Video/Final%20Reel_3.mp4" type="video/mp4">
     <style>
       html, body {
         margin: 0;
@@ -23,20 +23,64 @@
     </style>
   </head>
   <body>
-    <video id="demoVideo" src="/videos/vikas.mp4" autoplay muted playsinline loop preload="auto" controls></video>
+    <video id="demoVideo" src="https://storage.googleapis.com/engage360_signage_trial/e360_Signage_Video/Final%20Reel_3.mp4" autoplay muted playsinline loop preload="auto" controls></video>
     
     <script>
       (function() {
+        // Register service worker for caching
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/sw.js').catch(function() {})
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('✅ Service Worker registered:', registration);
+              // Force update on page load to ensure latest version
+              registration.update();
+              
+              // Check if service worker is controlling the page
+              if (registration.active) {
+                console.log('✅ Service Worker is active');
+              }
+              if (navigator.serviceWorker.controller) {
+                console.log('✅ Service Worker is controlling this page');
+              }
+              
+              // Check cache status
+              if ('caches' in window) {
+                caches.open('video-cache-v2').then(function(cache) {
+                  return cache.keys();
+                }).then(function(keys) {
+                  console.log('📦 Cache entries:', keys.length);
+                  keys.forEach(function(key) {
+                    console.log('  -', key.url);
+                  });
+                });
+              }
+            })
+            .catch(function(error) {
+              console.error('❌ Service Worker registration failed:', error);
+            });
         }
+        
         const v = document.getElementById('demoVideo');
         if (v && v.addEventListener) {
           // Ensure looping resumes even if the browser ignores the loop attribute occasionally
           v.addEventListener('ended', function() {
+            console.log('🔄 Video ended, looping...');
             try { v.currentTime = 0; } catch (e) {}
             const p = v.play && v.play();
             if (p && typeof p.catch === 'function') { p.catch(function(){}); }
+          });
+          
+          // Log cache status for debugging
+          v.addEventListener('loadstart', function() {
+            console.log('▶️ Video loading started');
+          });
+          
+          v.addEventListener('canplay', function() {
+            console.log('✅ Video can start playing');
+          });
+          
+          v.addEventListener('error', function(e) {
+            console.error('❌ Video error:', e);
           });
         }
       })();
